@@ -1,4 +1,4 @@
-% Utilizing a landmask datagrid cooresponding to the [Z,R] of calling:
+% Utilizes a landmask datagrid cooresponding to [Z,R] of:
 %
 %   coast = load('coast.mat');
 %   [Z, R] = vec2mtx(coast.lat, coast.long, ...
