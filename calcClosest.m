@@ -13,8 +13,8 @@
 %           -1 - Cyclonic
 %
 
-function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU] = calcClosest(lat, lon,...
-    antiCyc, cyc)
+function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
+    = calcClosest(lat, lon, antiCyc, cyc)
 
     consider_threshold = 20.0;
     
@@ -55,6 +55,7 @@ function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU] = calcClosest(l
                     eddyLon = antiCyc.eddies(i).Lon;
                     eddyAmp = antiCyc.eddies(i).Amplitude;
                     eddyU = antiCyc.eddies(i).MeanGeoSpeed;
+                    eddyIdx = i;
                 end
             end         
         else
@@ -95,6 +96,7 @@ function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU] = calcClosest(l
                     eddyLon = cyc.eddies(i).Lon;
                     eddyAmp = cyc.eddies(i).Amplitude;
                     eddyU = cyc.eddies(i).MeanGeoSpeed;
+                    eddyIdx = i;
                 end
             end         
         else
@@ -127,6 +129,7 @@ function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU] = calcClosest(l
         eddyLon = NaN;
         eddyAmp = NaN;
         eddyU = NaN;
+        eddyIdx = NaN;
         %eddyStruct = NaN;
         
     end

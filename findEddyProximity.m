@@ -1,5 +1,5 @@
 
-results = zeros(8128,6);
+results = zeros(8128,7);
 i = 1; %Hurricane Francis - 1992/10/22
 
 year = double(ebtrkatlc1992_2010(i,3));
@@ -58,14 +58,16 @@ while(i <= 8128)
         nextEddyWeek = 28 - offset;
         
         [results(i,1), results(i,2), results(i,3), results(i,4),...
-            results(i,5), results(i,6)] = calcClosest(lat,lon, antiCyc, cyc);
+            results(i,5), results(i,6), results(i,7)] = calcClosest(...
+            lat,lon, antiCyc, cyc);
         
         i = i + 1;
         
     else
 
         [results(i,1), results(i,2), results(i,3), results(i,4),...
-            results(i,5), results(i,6)] = calcClosest(lat,lon, antiCyc, cyc);
+            results(i,5), results(i,6), results(i,7)] = calcClosest(...
+            lat,lon, antiCyc, cyc);
         
         nextEddyWeek = nextEddyWeek - 1;
         i = i + 1;
