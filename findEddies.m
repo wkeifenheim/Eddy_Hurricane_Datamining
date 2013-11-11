@@ -69,6 +69,7 @@ function [anticycFile, cyclonicFile] = findEddies(year, month, day)
                         monthNum = 12;
                         dayMonthNum = eomday(yearNum, monthNum);
                         year = num2str(yearNum);
+                        month = num2str(monthNum);
                     else % decrement month, set day
                         monthNum = monthNum - 1;
                         dayMonthNum = eomday(yearNum, monthNum);

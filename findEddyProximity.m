@@ -1,11 +1,15 @@
-
-results = zeros(8128,7);
+t = cputime;
+ results = zeros(66280,7);
 i = 1; %Hurricane Francis - 1992/10/22
 
-year = double(ebtrkatlc1992_2010(i,3));
-month = double(ebtrkatlc1992_2010(i,4));
-day = double(ebtrkatlc1992_2010(i,5));
-hurID = cellstr(ebtrkatlc1992_2010(i,2));
+% year = double(ebtrkatlc1992_2010(i,3));
+% month = double(ebtrkatlc1992_2010(i,4));
+% day = double(ebtrkatlc1992_2010(i,5));
+hurID = cellstr(IBTrACS_All_1992_2010(i,1));
+iso_date = datevec(cellstr(IBTrACS_All_1992_2010(i,7)));
+year = iso_date(1);
+month = iso_date(2);
+day = iso_date(3);
 
 year_str = num2str(year);
 month_str = num2str(month);
@@ -20,26 +24,32 @@ cyc = load(cyc_file);
 %results_structs(10860).Lat = 30;
 
 % Account for how many time steps left in the week
- offset = double(ebtrkatlc1992_2010(i,6))/6 + ((weekday(strcat(year_str,...
+ offset = iso_date(4)/6 + ((weekday(strcat(year_str,...
      '-', month_str, '-', day_str)) - 1) * 4);
  % Number of time steps until eddy boddies need to be reloaded
  nextEddyWeek = 28 - offset;
 
  
  % Capped to stop after 2010 dates are run
-while(i <= 8128)
-    lat = double(ebtrkatlc1992_2010(i,7));
-    lon = double(ebtrkatlc1992_2010(i,8));
+while(i <= 66280)
+    lat = double(IBTrACS_All_1992_2010(i,17));
+    lon = double(IBTrACS_All_1992_2010(i,18));
     
     % Keep track of when to load next weeks eddy bodies
     % Or reload eddy files when next hurricane starts (hurricanes don't
     % necessarily end/start on consecutive days)
-    if(nextEddyWeek == 0 || ~strcmpi(hurID, cellstr(ebtrkatlc1992_2010(i,2))))
+    if(nextEddyWeek == 0 || ~strcmpi(hurID, cellstr(IBTrACS_All_1992_2010(i,1))))
         
-        year = double(ebtrkatlc1992_2010(i,3));
-        month = double(ebtrkatlc1992_2010(i,4));
-        day = double(ebtrkatlc1992_2010(i,5));
-        hurID = cellstr(ebtrkatlc1992_2010(i,2));
+%         year = double(ebtrkatlc1992_2010(i,3));
+%         month = double(ebtrkatlc1992_2010(i,4));
+%         day = double(ebtrkatlc1992_2010(i,5));
+%         hurID = cellstr(ebtrkatlc1992_2010(i,2));
+
+        hurID = cellstr(IBTrACS_All_1992_2010(i,1));
+        iso_date = datevec(cellstr(IBTrACS_All_1992_2010(i,7)));
+        year = iso_date(1);
+        month = iso_date(2);
+        day = iso_date(3);
         
         year_str = num2str(year);
         month_str = num2str(month);
@@ -52,7 +62,7 @@ while(i <= 8128)
         
         % Calculating offset is often redundant, but necessary to account
         % for begining a new hurricane
-         offset = double(ebtrkatlc1992_2010(i,6))/6 + ((weekday(strcat(year_str,...
+         offset = iso_date(4)/6 + ((weekday(strcat(year_str,...
             '-', month_str, '-', day_str)) - 1) * 4);
         
         nextEddyWeek = 28 - offset;
@@ -76,4 +86,6 @@ while(i <= 8128)
     end
 
 end
+
+    e = cputime -t
 
