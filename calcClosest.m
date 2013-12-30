@@ -17,6 +17,7 @@ function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
     = calcClosest(lat, lon, antiCyc, cyc)
 
     consider_threshold = 20.0;
+
     
     p2ll = load('/project/expeditions/eddies_project_data/ssh_data/data/pixels_2_lat_lon_map.mat');
     distanceToEddy = Inf('double');
