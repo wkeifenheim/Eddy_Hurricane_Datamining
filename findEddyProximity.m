@@ -98,11 +98,11 @@ for i = 1 : 66280
     search_eddy_tracks = 0;
     results(i,8) = NaN;
     
-    if(results(i,2) == -1)
+    if(results(i,2) == 1)
         track_set = bu_anticyc_tracks;
         a = 2; b = 3;
         search_eddy_tracks = 1;
-    elseif(results(i,2) == 1)
+    elseif(results(i,2) == -1)
         track_set = bu_cyclonic_tracks;
         a = 4; b = 5;
         search_eddy_tracks = 1;
