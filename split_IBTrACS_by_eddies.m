@@ -14,45 +14,46 @@ miss_removed = [];
 acyc_original_index = [];
 cyc_original_index = [];
 miss_original_index = [];
-%load('/panfs/roc/groups/6/kumarv/keifenhe/Documents/Datasets/IBTrACS_eddies_1992_2010_v2.mat'); % loads IBTrACS_eddies_1992_2010_v2 into workspace
-
-for i=1 : size(IBTrACS_eddies_1992_2010_v2,1)
-    if(isnan(double(IBTrACS_eddies_1992_2010_v2(i,20))))
+%load('/panfs/roc/groups/6/kumarv/keifenhe/Documents/Datasets/IBTrACS_eddies_1992_2010_working.mat'); % loads IBTrACS_eddies_1992_2010_working into workspace
+wait_h = waitbar(0,'now splitting by eddy interaction..');
+total = size(IBTrACS_eddies_1992_2010_working,1);
+for i=1 : size(IBTrACS_eddies_1992_2010_working,1)
+    if(isnan(double(IBTrACS_eddies_1992_2010_working(i,20))))
         
-        lat = double(IBTrACS_eddies_1992_2010_v2(i,7));
-        lon = double(IBTrACS_eddies_1992_2010_v2(i,8));
+        lat = double(IBTrACS_eddies_1992_2010_working(i,7));
+        lon = double(IBTrACS_eddies_1992_2010_working(i,8));
         overOcean = coordsOverOceanBool(lat,lon);
         
         if(overOcean)
-            IBTrACS_miss = [IBTrACS_miss; IBTrACS_eddies_1992_2010_v2(i,:)];
+            IBTrACS_miss = [IBTrACS_miss; IBTrACS_eddies_1992_2010_working(i,:)];
             miss_original_index = [miss_original_index; i];
         else
             fprintf('removing a time-step from Missed set...[%d,%d]\n', lat, lon);
             miss_removed = [miss_removed; [i,lat,lon]];
         end
         
-    elseif(double(IBTrACS_eddies_1992_2010_v2(i,20)) == 1) %anticyclonic association
+    elseif(double(IBTrACS_eddies_1992_2010_working(i,20)) == 1) %anticyclonic association
         
-        lat = double(IBTrACS_eddies_1992_2010_v2(i,7));
-        lon = double(IBTrACS_eddies_1992_2010_v2(i,8));
+        lat = double(IBTrACS_eddies_1992_2010_working(i,7));
+        lon = double(IBTrACS_eddies_1992_2010_working(i,8));
         overOcean = coordsOverOceanBool(lat,lon);
         
         if(overOcean)
-            IBTrACS_acyc = [IBTrACS_acyc; IBTrACS_eddies_1992_2010_v2(i,:)];
+            IBTrACS_acyc = [IBTrACS_acyc; IBTrACS_eddies_1992_2010_working(i,:)];
             acyc_original_index = [acyc_original_index; i];
         else
             fprintf('removing a time-step from Anticyclonic set...[%d,%d]\n', lat, lon);
             acyc_removed = [acyc_removed; [i,lat,lon]];
         end
         
-    elseif(double(IBTrACS_eddies_1992_2010_v2(i,20)) == -1) %cyclonic association
+    elseif(double(IBTrACS_eddies_1992_2010_working(i,20)) == -1) %cyclonic association
         
-        lat = double(IBTrACS_eddies_1992_2010_v2(i,7));
-        lon = double(IBTrACS_eddies_1992_2010_v2(i,8));
+        lat = double(IBTrACS_eddies_1992_2010_working(i,7));
+        lon = double(IBTrACS_eddies_1992_2010_working(i,8));
         overOcean = coordsOverOceanBool(lat,lon);
         
         if(overOcean)
-            IBTrACS_cyc = [IBTrACS_cyc; IBTrACS_eddies_1992_2010_v2(i,:)];
+            IBTrACS_cyc = [IBTrACS_cyc; IBTrACS_eddies_1992_2010_working(i,:)];
             cyc_original_index = [cyc_original_index; i];
         else
             fprintf('removing a time-step from Cyclonic set...[%d,%d]\n', lat, lon);

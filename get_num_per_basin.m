@@ -6,10 +6,21 @@
 cyc_set = IBTrACS_cyc;
 acyc_set = IBTrACS_acyc;
 
+%the following further reduces the datasets by eddy lifetime
+lifetime = 5; %the integer value represents the number of weeks in existence
+c_idx = double(cyc_set(:,41)) >= lifetime;
+a_idx = double(acyc_set(:,41)) >= lifetime;
+cyc_set = cyc_set(c_idx,:);
+acyc_set = acyc_set(a_idx,:);
+
+
 tic
 wait_h = waitbar(0,'Calculating totals for each basin..');
+
 sum_eddies = size(acyc_set,1) + size(cyc_set,1);
 
+%Only the first six are typically found in the dataset, but are left here
+%in case future versions of IBTrACS start including the remaining basins
 basins = cellstr(['NA';'SA';'WP';'EP';'SP';'NI';'SI';'AS';'BB';'EA';'WA';...
     'CP';'CS';'GM';'MM']);
 
@@ -95,4 +106,5 @@ for j = 1 : size(acyc_set,1)
     waitbar((i+j)/sum_eddies)
 end
 
+delete(wait_h);
 toc
