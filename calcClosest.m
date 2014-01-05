@@ -13,13 +13,13 @@
 %           -1 - Cyclonic
 %
 
-function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
+function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
     = calcClosest(lat, lon, antiCyc, cyc)
 
-    consider_threshold = 20.0;
+    consider_threshold = 24.0;
 
     
-    p2ll = load('/project/expeditions/eddies_project_data/ssh_data/data/pixels_2_lat_lon_map.mat');
+    p2ll = load('C:\Users\Hobbes\Documents\Expeditions\pixels_2_lat_lon_map.mat');
     distanceToEddy = Inf('double');
     EddyIndex = [0 0]; % Type [-1,1] and index
     
@@ -36,17 +36,18 @@ function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
             
             distances = zeros(size(pixelLatLons,1),1);
             
-%             for j = 1 : size(distances,1)
-%                 distances(j) = geoddistance(lat, lon, pixelLatLons(j,1),...
-%                     pixelLatLons(j,2));
-%             end
-
             for j = 1 : size(distances,1)
-                distances(j) = deg2km(distance(lat,lon,pixelLatLons(j,1),...
-                    pixelLatLons(j,2)));
+                distances(j) = geoddistance(lat, lon, pixelLatLons(j,1),...
+                    pixelLatLons(j,2));
             end
+
+%             for j = 1 : size(distances,1)
+%                 distances(j) = deg2km(distance(lat,lon,pixelLatLons(j,1),...
+%                     pixelLatLons(j,2)));
+%             end
             
             [d,di] = min(distances);
+            d = d/1000;
             
             if(d <= consider_threshold)
                 if(d < distanceToEddy)
@@ -77,17 +78,18 @@ function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
             
             distances = zeros(size(pixelLatLons,1),1);
             
-%             for j = 1 : size(distances,1)
-%                 distances(j) = geoddistance(lat, lon, pixelLatLons(j,1),...
-%                     pixelLatLons(j,2));
-%             end
-
             for j = 1 : size(distances,1)
-                distances(j) = deg2km(distance(lat,lon,pixelLatLons(j,1),...
-                    pixelLatLons(j,2)));
+                distances(j) = geoddistance(lat, lon, pixelLatLons(j,1),...
+                    pixelLatLons(j,2));
             end
+
+%             for j = 1 : size(distances,1)
+%                 distances(j) = deg2km(distance(lat,lon,pixelLatLons(j,1),...
+%                     pixelLatLons(j,2)));
+%             end
             
             [d,di] = min(distances);
+            d = d/1000;
             
             if(d <= consider_threshold) %10 km
                 if(d < distanceToEddy)
@@ -111,20 +113,20 @@ function [proxType, eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
     % Found something
     if(EddyIndex(1,1) == 1)
         
-        proxType = NaN; % for now %TODO: calculate eddy boundaries
+        %proxType = NaN; % for now %TODO: calculate eddy boundaries
         eddyClass = 1;
         %eddyStruct = antiCyc.eddies(EddyIndex(2));
         
     elseif (EddyIndex(1,1) == -1)
             
-        proxType = NaN;
+        %proxType = NaN;
         eddyClass = -1;
         %eddyStruct = cyc.eddies(EddyIndex(2));
     
     % Found nothing    
     else
         
-        proxType = NaN;
+        %proxType = NaN;
         eddyClass = NaN;
         eddyLat = NaN;
         eddyLon = NaN;

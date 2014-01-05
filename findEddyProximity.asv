@@ -10,22 +10,23 @@ EddyGeoSpeed = zeros(60819,1);
 EddyIdx = zeros(60819,1);
 TrackIdx = zeros(60819,1);
 
-% i = 1; %Hurricane Angela, 1992.10.12
-% time_slice = IBTrACS_All_1992_2010.TimeSlice(1);
-% time_slice = num2str(time_slice);
-% anticycFile = strcat('C:\Users\Hobbes\Documents\GitHub\Eddy_Hurricane_Datamining\eddies\',...
-%     'anticyc_', time_slice, '.mat');
-% cyclonicFile = strcat('C:\Users\Hobbes\Documents\GitHub\Eddy_Hurricane_Datamining\eddies\',...
-%     'cyclonic_', time_slice, '.mat');
-% antiCyc = load(anticycFile);
-% cyc = load(cyclonicFile);
+i = 1; %Hurricane Angela, 1992.10.12
+hur_id = IBTrACS_All_1992_2010.Serial_Num(1);
+time_slice = IBTrACS_All_1992_2010.TimeSlice(i);
+time_slice = num2str(time_slice);
+anticycFile = strcat('C:\Users\Hobbes\Documents\GitHub\Eddy_Hurricane_Datamining\eddies\',...
+    'anticyc_', time_slice, '.mat');
+cyclonicFile = strcat('C:\Users\Hobbes\Documents\GitHub\Eddy_Hurricane_Datamining\eddies\',...
+    'cyclonic_', time_slice, '.mat');
+antiCyc = load(anticycFile);
+cyc = load(cyclonicFile);
  
  % Capped to stop after 2010 dates are run
 for i = 1 : 60819
     lat = IBTrACS_All_1992_2010.Latitude_for_mapping(i);
     lon = IBTrACS_All_1992_2010.Longitude_for_mapping(i);
     
-
+    if(hur_id ~= IBTrACS_
     time_slice = IBTrACS_All_1992_2010.TimeSlice(i);
     time_slice = num2str(time_slice);
     anticycFile = strcat('C:\Users\Hobbes\Documents\GitHub\Eddy_Hurricane_Datamining\eddies\',...
@@ -34,7 +35,6 @@ for i = 1 : 60819
         'cyclonic_', time_slice, '.mat');
     antiCyc = load(anticycFile);
     cyc = load(cyclonicFile);
-
     
     [EddyClass(i), EddyLat(i), EddyLon(i),...
         EddyAmp(i), EddyGeoSpeed(i), EddyIdx(i)] = ...
