@@ -5,15 +5,15 @@
 
 %Bin ends for eddy age:
 %   [1:10:121, 134]
-%cla
+cla
 
 %preamble...
 % cyc_idx = IBTrACS_five_plus.EddyClass(:) == -1;
 % acyc_idx = IBTrACS_five_plus.EddyClass(:) == 1;
 % ibt_cyc = IBTrACS_five_plus(cyc_idx,:);
 % ibt_acyc = IBTrACS_five_plus(acyc_idx,:);
-% ibt_cyc = [ibt_cyc.EddyAge(:), ibt_cyc.TrackLength(:)];
-% ibt_acyc = [ibt_acyc.EddyAge(:), ibt_acyc.TrackLength(:)];
+% ibt_cyc = [ibt_cyc.EddyAge(:), ibt_cyc.EddyTrackLength(:)];
+% ibt_acyc = [ibt_acyc.EddyAge(:), ibt_acyc.EddyTrackLength(:)];
 
 a = 5;
 b = 15;
@@ -25,8 +25,8 @@ cyc = ibt_cyc(cyc_idx,:);
 acyc = ibt_acyc(acyc_idx,:);
 %subdivide until all track lengths are represented in different rows...
 
-% size(cyc,1)
-% size(acyc,1)
+size(cyc,1)
+size(acyc,1)
 % cyc_total = cyc_total + size(cyc,1);
 % acyc_total = acyc_total + size(acyc,1);
 % bin_cyc = zeros(15,15);
@@ -44,7 +44,7 @@ end
 
 bin_cyc = histc(cyc,bins);%/size(cyc,1);
 bin_acyc = histc(acyc,bins);%/size(acyc,1);
-both_bins = [bin_cyc, bin_acyc];
+both_bins = [bin_cyc', bin_acyc'];
 bar(bins, both_bins);
 xlabel('Age of eddy during hurricane interaction');
 ylabel('Number');

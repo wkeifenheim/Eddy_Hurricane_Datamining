@@ -7,11 +7,11 @@ cyc_set = IBTrACS_cyc;
 acyc_set = IBTrACS_acyc;
 
 %the following further reduces the datasets by eddy lifetime
-% lifetime = 5; %the integer value represents the number of weeks in existence
-% c_idx = cyc_set.TrackLength(:) >= lifetime;
-% a_idx = acyc_set.TrackLength(:) >= lifetime;
-% cyc_set = cyc_set(c_idx,:);
-% acyc_set = acyc_set(a_idx,:);
+lifetime = 5; %the integer value represents the number of weeks in existence
+c_idx = cyc_set.EddyTrackLength(:) >= lifetime;
+a_idx = acyc_set.EddyTrackLength(:) >= lifetime;
+cyc_set = cyc_set(c_idx,:);
+acyc_set = acyc_set(a_idx,:);
 
 
 tic
@@ -21,11 +21,15 @@ sum_eddies = size(acyc_set,1) + size(cyc_set,1);
 
 %Only the first six are typically found in the dataset, but are left here
 %in case future versions of IBTrACS start including the remaining basins
-basins = cellstr(['NA';'SA';'WP';'EP';'SP';'NI';'SI';'AS';'BB';'EA';'WA';...
-    'CP';'CS';'GM';'MM']);
+basins = cellstr(['NH';'SH';'NA';'SA';'WP';'EP';'SP';'NI';'SI';'AS';'BB';...
+    'EA';'WA';'CP';'CS';'GM';'MM']);
 
-num_per_basin = zeros(2,15);
+num_per_basin = zeros(2,17);
 num_per_basin = dataset({num_per_basin,basins{:}});
+num_per_basin.NH(1) = sum(cyc_set.Latitude_for_mapping(:) >= 0);
+num_per_basin.SH(1) = sum(cyc_set.Latitude_for_mapping(:) < 0);
+num_per_basin.NH(2) = sum(acyc_set.Latitude_for_mapping(:) >= 0);
+num_per_basin.SH(2) = sum(acyc_set.Latitude_for_mapping(:) < 0);
 
 %Populate Cyclonic set...
 for i = 1 : size(cyc_set,1)

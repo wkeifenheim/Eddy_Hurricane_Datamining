@@ -2,7 +2,7 @@
 %consequtive time steps in a hurricane track encounter the same eddy, only
 %the first time step will list the encounter in the new dataset.
 
-IBTrACS_1992_2010_NewI = IBTrACS_1992_2010;
+IBTrACS_1992_2010_NewI2 = IBTrACS_1992_2010;
 
 wait_h  = waitbar(0,'progress');
 cur_hur = IBTrACS_1992_2010.Serial_Num(1);
@@ -17,22 +17,22 @@ for i = 1 : 60819
     end
     if(strcmp(IBTrACS_1992_2010.Serial_Num(i), cur_hur))
         
-        if(eIdx ~= IBTrACS_1992_2010.EddyIdx(i) && eClass ~= ...
+        if(eIdx ~= IBTrACS_1992_2010.EddyIdx(i) || eClass ~= ...
                 IBTrACS_1992_2010.EddyClass(i))
             
             eIdx = IBTrACS_1992_2010.EddyIdx(i);
             eClass = IBTrACS_1992_2010.EddyClass(i);
         else
 
-            IBTrACS_1992_2010_NewI.EddyClass(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyLat(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyLon(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyAmp(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyGeoSpeed(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyIdx(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyTrackIdx(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyAge(i) = NaN;
-            IBTrACS_1992_2010_NewI.EddyTrackLength(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyClass(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyLat(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyLon(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyAmp(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyGeoSpeed(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyIdx(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyTrackIdx(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyAge(i) = NaN;
+            IBTrACS_1992_2010_NewI2.EddyTrackLength(i) = NaN;
         end
     end
     waitbar(i/60819)
