@@ -28,10 +28,6 @@ for i = 1 : stop
        track = cell2mat(bu_cyclonic_tracks(k));
        %get previous values, if there are any
        if(l ~= 1)
-%            past_time = timeslice_indices(j-1);
-%            cyclonicFile = strcat('/project/expeditions/eddies_project_data/results/new_bottom_up_w_land_mask_09_16_2013/',...
-%             'cyclonic_', num2str(past_time), '.mat');
-%            load(cyclonicFile);
            old_eddy_idx = track(l-1, 4);
            eddy = h_cyc(j-1).eddies(old_eddy_idx);
            results(i,1) = eddy.Amplitude;
@@ -42,13 +38,9 @@ for i = 1 : stop
        end
        
        %get future values
-       if(l < IBTrACS_five_plus.TrackLength(i))
-%            future_time = timeslice_indices(j+1);
-%            cyclonicFile = strcat('/project/expeditions/eddies_project_data/results/new_bottom_up_w_land_mask_09_16_2013/',...
-%             'cyclonic_', num2str(future_time), '.mat');
-%            load(cyclonicFile);
+       if(l < IBTrACS_five_plus.EddyTrackLength(i))
            future_eddy_idx = track(l+1, 4);
-           eddy = h(j+1).eddies(future_eddy_idx);
+           eddy = h_cyc(j+1).eddies(future_eddy_idx);
            results(i,2) = eddy.Amplitude;
            results(i,4) = eddy.MeanGeoSpeed;
        else
@@ -62,10 +54,6 @@ for i = 1 : stop
        track = cell2mat(bu_anticyc_tracks(k));
        %get previous values, if there are any
        if(l ~= 1)
-%            past_time = timeslice_indices(j-1);
-%            anticycFile = strcat('/project/expeditions/eddies_project_data/results/new_bottom_up_w_land_mask_09_16_2013/',...
-%             'anticyc_', num2str(past_time), '.mat');
-%            load(anticycFile);
            old_eddy_idx = track(l-1, 4);
            eddy = h_acyc(j-1).eddies(old_eddy_idx);
            results(i,1) = eddy.Amplitude;
@@ -77,10 +65,6 @@ for i = 1 : stop
        
        %get future values
        if(l ~= IBTrACS_five_plus.EddyTrackLength(i))
-%            future_time = timeslice_indices(j+1);
-%            anticycFile = strcat('/project/expeditions/eddies_project_data/results/new_bottom_up_w_land_mask_09_16_2013/',...
-%             'anticyc_', num2str(future_time), '.mat');
-%            load(anticycFile);
            old_eddy_idx = track(l+1, 4);
            eddy = h_acyc(j+1).eddies(old_eddy_idx);
            results(i,2) = eddy.Amplitude;
