@@ -14,10 +14,10 @@
 %
 % Requires: landmask_datagrid.mat
 
-function isOcean = coordsOverOceanBool(lat, lon)
+function isOcean = coordsOverOceanBool(lat, lon, landmask_Z, landmask_R)
 
     % Loads landmask_R and landmask_Z in to the workspace
-    load('/project/expeditions/woodrow/Datasets/landmask_datagrid.mat');
+%     load('/project/expeditions/woodrow/Datasets/landmask_datagrid.mat');
     
     value_at_coords = ltln2val(landmask_Z, landmask_R, lat, lon, 'nearest');
     isOcean = (value_at_coords == 2);

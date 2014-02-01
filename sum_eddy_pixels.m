@@ -14,11 +14,28 @@
 %i.e. pixels(1,:) = [cyc_pixels, acyc_pixels];
 pixels = zeros(1915,2);
 
+%store the first timestep at which a hurricane encountered an eddy
+first_encounter = zeros(1915,1);
+first_type = [];
+
 %will contain strings following the description given above..
 list = cell(1915,1);
 
+%store the pixel size of all encountered cyc/acyc eddies
+cyc_pixels = [];
+acyc_pixels =[];
+
 %running index of what hurricane track we are on. should not exceed 1915
 j = 1;
+
+%flag for keeping track of first eddy encountered in a hurricane track
+first = 1;
+
+%remember last encountered eddy so sequential time steps near that eddy
+%can be tallied..
+rem_ed_type = NaN;
+rem_ed_idx = NaN;
+rem_ed_count = 0;
 
 cur_hur = IBTrACS_1992_2010_NewI.Serial_Num(1);
 wait_h = waitbar(0,'progress');
@@ -29,6 +46,10 @@ for i = 1 : 60819
     if(~strcmp(cur_hur, IBTrACS_1992_2010_NewI.Serial_Num(i)))
         j = j + 1;
         cur_hur = IBTrACS_1992_2010_NewI.Serial_Num(i);
+        rem_ed_type = NaN;
+        rem_ed_idx = NaN;
+        rem_ed_count = 0;
+        first = 1;
     end
     
     %find the correct timeslice, assuming all timeslices are preloaded
@@ -41,19 +62,47 @@ for i = 1 : 60819
         e = 'C';
         pppp = h_cyc(time_idx).eddies(e_idx).Stats.Area;
         pixels(j,1) = pixels(j,1) + pppp;
-        pppp = num2str(pppp);
-        list_str = strcat(hhh, ':', e, ':', pppp);
-        list{j} = strcat(list{j}, {' '}, list_str);
+%         pppp = num2str(pppp);
+%         list_str = strcat(hhh, ':', e, ':', pppp);
+%         list{j} = strcat(list{j}, {' '}, list_str);
+        cyc_pixels = [cyc_pixels; pppp];
+        rem_ed_type = -1;
+        rem_ed_idx = IBTrACS_1992_2010_NewI.EddyIdx(i);
+        if(first)
+           first_encounter(j) = str2double(hhh);
+           first_type = [first_type; 'C'];
+           first = 0;
+        end
         
     elseif(IBTrACS_1992_2010_NewI.EddyClass(i) == 1) %acyc
         hhh = num2str(IBTrACS_1992_2010_NewI.HurricaneAge(i));
         e = 'A';
         pppp = h_acyc(time_idx).eddies(e_idx).Stats.Area;
         pixels(j,2) = pixels(j,2) + pppp;
+%         pppp = num2str(pppp);
+%         list_str = strcat(hhh, ':', e, ':', pppp);
+%         list{j} = strcat(list{j}, {' '}, list_str);
+        acyc_pixels = [acyc_pixels; pppp];
+        rem_ed_type = 1;
+        rem_ed_idx = IBTrACS_1992_2010_NewI.EddyIdx(i);
+        if(first)
+           first_encounter(j) = str2double(hhh);
+           first_type = [first_type; 'A'];
+           first = 0;
+        end
+    end
+    
+    if(rem_ed_type == IBTrACS_1992_2010.EddyClass(i) &&...
+            rem_ed_idx == IBTrACS_1992_2010.EddyIdx(i))
+        rem_ed_count = rem_ed_count + 1;
+    elseif(rem_ed_count)
+        rem_ed_type = NaN;
+        rem_ed_idx = NaN;
+        rem_ed_count = 0;
+        count = num2str(rem_ed_count);
         pppp = num2str(pppp);
-        list_str = strcat(hhh, ':', e, ':', pppp);
+        list_str = strcat(hhh, ':', e, ':', count, ':', pppp);
         list{j} = strcat(list{j}, {' '}, list_str);
-        
     end
     
     waitbar(i/60819)

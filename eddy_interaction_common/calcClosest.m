@@ -24,10 +24,14 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
     EddyIndex = [0 0]; % Type [-1,1] and index
     
     for i=1 : size(antiCyc,2)
-        if(antiCyc(i).BUBodyCount)
-            eddy = antiCyc(i).BUBody;
+        if(antiCyc(i).Type == 0)
+            if(antiCyc(i).BUBodyCount)
+                eddy = antiCyc(i).BUBody;
+            else
+                eddy = antiCyc(i).ESBody;
+            end
         else
-            eddy = antiCyc(i).ESBody;
+            continue
         end
         latProximity = abs(lat - eddy.Lat);
         lonProximity = abs(lon - eddy.Lon);
@@ -71,10 +75,14 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
     end
         
     for i=1 : size(cyc,2)
-        if(cyc(i).BUBodyCount)
-            eddy = cyc(i).BUBody;
+        if(cyc(i).Type == 0)
+            if(antiCyc(i).BUBodyCount)
+                eddy = cyc(i).BUBody;
+            else
+                eddy = cyc(i).ESBody;
+            end
         else
-            eddy = cyc(i).ESBody;
+            continue
         end
         latProximity = abs(lat - eddy.Lat);
         lonProximity = abs(lon - eddy.Lon);
@@ -87,11 +95,6 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
             pixelLatLons(:,2) = pixelLatLons(:,2) - 360;
             
             distances = zeros(size(pixelLatLons,1),1);
-            
-%             for j = 1 : size(distances,1)
-%                 distances(j) = geoddistance(lat, lon, pixelLatLons(j,1),...
-%                     pixelLatLons(j,2));
-%             end
 
             for j = 1 : size(distances,1)
                 distances(j) = deg2km(distance(lat,lon,pixelLatLons(j,1),...
