@@ -4,6 +4,7 @@ result(1,2) = NaN;
 
 current_hurr = IBTrACS_1992_2010.Serial_Num(1);
 %find first delta
+wait_h = waitbar(0,'progress..')
 for i=2:60819
     if(strcmp(current_hurr, IBTrACS_1992_2010.Serial_Num(i)))
         if(~isnan(IBTrACS_1992_2010.WindWMO(i)) && ~isnan(IBTrACS_1992_2010.WindWMO(i-1)))
@@ -17,8 +18,10 @@ for i=2:60819
         result(i,1) = NaN;
     end
         
-
+    waitbar(i/60819)
 end
+
+delete(wait_h)
 
 %find second delta
 for i=2:60819
