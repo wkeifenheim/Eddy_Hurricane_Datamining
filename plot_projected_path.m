@@ -1,7 +1,8 @@
 %Pick a hurricane and plot projected movement along with the actual track
 %how to step to next week of eddy data
 
-handles.hurr_choice = '1997212N11265';
+% handles.hurr_choice = '1995240N11337';
+handles.hurr_choice = inputdlg('Hurricane Serial','Input Hurricane');
 handles.hurr_idx = strcmp(IBTrACS_1992_2010.Serial_Num(:), handles.hurr_choice);
 handles.track_subset = IBTrACS_1992_2010(handles.hurr_idx,:);
 handles.length_subset = size(handles.track_subset,1);
@@ -34,6 +35,9 @@ for j = 1 : handles.num_timeslices
     handles.canvas = zeros(721, 1440, 'uint8');
 
     handles.axes1 = axesm('pcarre', 'Origin', [0 180 0]);%, 'MapLatLimit', [0 70], 'MapLonLimit', [-120 0]);
+    plotm(1,1,'-.','Color',[1 1 1]);
+    quiverm(1,1,2,2,'m');
+    legend('Hurricane Track','Projected Hurricane Moves');
     load coast
     plotm(lat,long)
     whitebg('k')
@@ -190,16 +194,32 @@ for j = 1 : handles.num_timeslices
     pcolorm(handles.ssh.lat(a), handles.ssh.lon(b), handles.canvas(a,b));
     
     plotm(handles.track_subset.Latitude_for_mapping(:),...
-        handles.track_subset.Longitude_for_mapping(:),'-.','Color',[1 1 1],'LineWidth',2);
+        handles.track_subset.Longitude_for_mapping(:),'-*','Color',[1 1 1],'LineWidth',2);
     idx = handles.track_subset.TimeSlice(:) == handles.ts_list{j};
-    arclength = km2deg(handles.track_subset.Displacement_d1(idx));
-    azimuth = handles.track_subset.Azimuth(idx);
-    [latouts, lonouts] = reckon(handles.track_subset.Latitude_for_mapping(idx),...
-        handles.track_subset.Longitude_for_mapping(idx), arclength, azimuth);
-    projected = quiverm(handles.track_subset.Latitude_for_mapping(idx),...
-        handles.track_subset.Longitude_for_mapping(idx), latouts, lonouts,...
-         'm',2);
-     waitfor(msgbox('Close to display next timeslice'));
-     delete(projected);
+    arclength = km2deg(handles.track_subset.Displacement_d1(:),'earth');
+%     arclength = arclength(2:end);
+%     arclength = arclength(2:end);
+    azimuth = handles.track_subset.Azimuth(:);
+    azimuth = [NaN; azimuth(1:(end-1))];
+    k = find(idx,1,'first');
+    idx(k) = false;
+    [latouts, lonouts] = reckon(handles.track_subset.Latitude_for_mapping(:),...
+        handles.track_subset.Longitude_for_mapping(:), arclength, azimuth);
+    latouts = latouts - handles.track_subset.Latitude_for_mapping(:);
+    lonouts = lonouts - handles.track_subset.Longitude_for_mapping(:);
+    quiver_set = [handles.track_subset.Latitude_for_mapping(:),...
+        handles.track_subset.Longitude_for_mapping(:), latouts, lonouts];
+%     projected = quiverm(handles.track_subset.Latitude_for_mapping(idx),...
+%         handles.track_subset.Longitude_for_mapping(idx), latouts(idx), lonouts(idx),...
+%          'm');
+
+    %.. quiverm cannot correctly display vectors from vector inputs..
+    for l = find(idx,1,'first') : find(idx,1,'last')
+        quiverm(quiver_set(l,1), quiver_set(l,2), quiver_set(l,3),...
+            quiver_set(l,4), 'm');
+    end
+    waitfor(msgbox('Press "ok" to display next timeslice'));
+%     delete(projected);
+    cla
 
 end
