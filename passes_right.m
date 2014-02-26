@@ -19,10 +19,10 @@ function [on_right, dist] = passes_right(x1, y1, x2, y2, eddy_x, eddy_y)
     
     test_result = (x2-x1)*(eddy_y - y1) - (y2-y1)*(eddy_x-x1);
     
-%     Q1 = [x1 y1];
-%     Q2 = [x2 y2];
-%     P = [eddy_x eddy_y];
-%     d = abs(det([Q2-Q1;P-Q1]))/norm(Q2-Q1);
+    Q1 = [x1 y1];
+    Q2 = [x2 y2];
+    P = [eddy_x eddy_y];
+    d = abs(det([Q2-Q1;P-Q1]))/norm(Q2-Q1);
 
       % Using x/y coordinates....
 %     d_Q1_Q2_sqr = (x2-x1)^2 + (y2-y1)^2; %distance^2 from Q1 to Q2
@@ -34,16 +34,16 @@ function [on_right, dist] = passes_right(x1, y1, x2, y2, eddy_x, eddy_y)
 %     [d_Q1_eddy, az_Q1_eddy] = distance(x1,y1,eddy_x,eddy_y);
 %     theta = abs(az_Q1_Q2 - az_Q1_eddy);
 %     d = sind(theta) * d_Q1_eddy;
-%     dist = d;
-    dist = NaN;
+    dist = d;
+%     dist = NaN;
 % 
 %     if(d < 0)
 %         disp('negative distance!...')
 %     end
     
-%     if(d <= 0.4497) %trajectory within 25km of eddy center
-%         on_right = 0;
-    if(test_result > 0)
+    if(d <= 0.4497) %trajectory within 25km of eddy center
+        on_right = 0;
+    elseif(test_result > 0)
         on_right = 1;
     elseif(test_result < 0)
         on_right = -1;
