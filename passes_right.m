@@ -41,7 +41,7 @@ function [on_right, dist] = passes_right(x1, y1, x2, y2, eddy_x, eddy_y)
 %         disp('negative distance!...')
 %     end
     
-    if(d <= 0.4497) %trajectory within 25km of eddy center
+    if(d <= 0.2248) %trajectory within 25km of eddy center
         on_right = 0;
     elseif(test_result > 0)
         on_right = 1;
