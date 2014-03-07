@@ -4,12 +4,12 @@ first_idx(1) = true;
 cur_hur = IBTrACS_1992_2010.Serial_Num(1);
 
 %Az_d1 cuttoff value for pruning hurricane direction deltas
-az_d_cuttoff = 32.2307;
+az_d_cuttoff = 32.2307; %90th percentile
 
 disp_25 = prctile(IBTr_eddies.Displacement_d1(:),25);
 disp_50 = prctile(IBTr_eddies.Displacement_d1(:),50);
 disp_75 = prctile(IBTr_eddies.Displacement_d1(:),75);
-disp_100 = prctile(IBTr_eddies.Displacement_d1(:),100);
+disp_100 = max(IBTr_eddies.Displacement_d1(:));
 
 for i = 1 : size(IBTrACS_1992_2010,1)
     if(~strcmp(cur_hur, IBTrACS_1992_2010.Serial_Num(i)))
@@ -73,10 +73,10 @@ ibt_no_first = ibt_no_first(cut_idx,:);
 res_no_first = res_no_first(cut_idx,:);
 
 %prune by translational distance...
-% cut_idx = bitand(ibt_no_first.Displacement_d1(:) > disp_75,...
-%    ibt_no_first.Displacement_d1(:) <= disp_100);
-% ibt_no_first = ibt_no_first(cut_idx,:);
-% res_no_first = res_no_first(cut_idx,:);
+cut_idx = bitand(ibt_no_first.Displacement_d1(:) > disp_75,...
+   ibt_no_first.Displacement_d1(:) <= disp_100);
+ibt_no_first = ibt_no_first(cut_idx,:);
+res_no_first = res_no_first(cut_idx,:);
 
 
 n_ratios = zeros(3,2);
