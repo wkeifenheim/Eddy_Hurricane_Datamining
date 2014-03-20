@@ -2,7 +2,7 @@
 %Developed with reference to:
 %http://stackoverflow.com/questions/3461453/determine-which-side-of-a-line-a-point-lies
 %http://www.mathworks.com/matlabcentral/newsreader/view_thread/164048
-% on_left will be:
+% on_right will be:
 % 1 - if true
 % 0 - if hurricane passes over the center of the eddy
 % -1 - if passes on the left
