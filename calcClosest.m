@@ -13,13 +13,13 @@
 %           -1 - Cyclonic
 %
 
-function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx]...
-    = calcClosest(lat, lon, antiCyc, cyc)
+function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx, EddyPixelCount]...
+    = calcClosest(lat, lon, antiCyc, cyc, p2ll)
 
     consider_threshold = 20.0;
 
     
-    p2ll = load('/project/expeditions/eddies_project_data/ssh_data/data/pixels_2_lat_lon_map.mat');
+%     p2ll = load('/project/expeditions/eddies_project_data/ssh_data/data/pixels_2_lat_lon_map.mat');
     distanceToEddy = Inf('double');
     EddyIndex = [0 0]; % Type [-1,1] and index
     
