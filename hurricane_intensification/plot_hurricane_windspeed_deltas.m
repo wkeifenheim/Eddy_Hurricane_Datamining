@@ -34,12 +34,18 @@ for i = 1 : data_size - 1
 end
 delete(wait_h);
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Entering eddy block..
 %plot changes of windspeed when just entering eddies
+
+cyc_idx = IBTrACS_1992_2010.EddyClass(:) == -1;
+acyc_idx = IBTrACS_1992_2010.EddyClass(:) == 1;
+
+
 f1 = figure;
 bins = (-100:5:75);
-cyc_enter_idx = bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == -1);
-acyc_enter_idx = bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == 1);
+cyc_enter_idx = bitand(enter_eddy,cyc_idx);
+acyc_enter_idx = bitand(enter_eddy,acyc_idx);
 
 cyc_counts = histc(IBTrACS_1992_2010.Wind_d1(cyc_enter_idx),bins);
 acyc_counts = histc(IBTrACS_1992_2010.Wind_d1(acyc_enter_idx),bins);
@@ -55,7 +61,7 @@ xlabel('Windspeed Delta (knots)');
 %first quarter of translational speed..
 f2 = figure;
 bins = (-100:5:75);
-cyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+cyc_enter_idx = bitand(bitand(enter_eddy,cyc_idx),...
     IBTrACS_1992_2010.Displacement_d1(:) <= disp_25);
 acyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
     IBTrACS_1992_2010.Displacement_d1(:) <= disp_25);
@@ -76,7 +82,7 @@ f3 = figure;
 bins = (-100:5:75);
 bound_idx = bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_25,...
     IBTrACS_1992_2010.Displacement_d1(:) <= disp_50);
-cyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+cyc_enter_idx = bitand(bitand(enter_eddy,cyc_idx),...
     bound_idx);
 acyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
     bound_idx);
@@ -97,7 +103,7 @@ f4 = figure;
 bins = (-100:5:75);
 bound_idx = bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_50,...
     IBTrACS_1992_2010.Displacement_d1(:) <= disp_75);
-cyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+cyc_enter_idx = bitand(bitand(enter_eddy,cyc_idx),...
     bound_idx);
 acyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
     bound_idx);
@@ -118,7 +124,7 @@ f5 = figure;
 bins = (-100:5:75);
 bound_idx = bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_25,...
     IBTrACS_1992_2010.Displacement_d1(:) <= disp_50);
-cyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+cyc_enter_idx = bitand(bitand(enter_eddy,cyc_idx),...
     bound_idx);
 acyc_enter_idx = bitand(bitand(enter_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
     bound_idx);
@@ -131,5 +137,105 @@ hold on;
 p10 = plot(bins,acyc_counts, 'r');
 legend('cyclonic eddies','anticyclonic');
 title('Windspeed delta at first time-step inside eddy | 76th-100th translational speeds');
+ylabel('count');
+xlabel('Windspeed Delta (knots)');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Exiting eddy block..
+f6 = figure;
+bins = (-100:5:75);
+cyc_enter_idx = bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == -1);
+acyc_enter_idx = bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == 1);
+
+cyc_counts = histc(IBTrACS_1992_2010.Wind_d1(cyc_enter_idx),bins);
+acyc_counts = histc(IBTrACS_1992_2010.Wind_d1(acyc_enter_idx),bins);
+counts = [cyc_counts, acyc_counts];
+p10 = plot(bins,cyc_counts);
+hold on;
+p12 = plot(bins,acyc_counts, 'r');
+legend('cyclonic eddies','anticyclonic');
+title('Windspeed delta at first time-step after eddy | All translational speeds');
+ylabel('count');
+xlabel('Windspeed Delta (knots)');
+
+%first quarter of translational speed..
+f7 = figure;
+bins = (-100:5:75);
+cyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_25);
+acyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_25);
+
+cyc_counts = histc(IBTrACS_1992_2010.Wind_d1(cyc_enter_idx),bins);
+acyc_counts = histc(IBTrACS_1992_2010.Wind_d1(acyc_enter_idx),bins);
+counts = [cyc_counts, acyc_counts];
+p13 = plot(bins,cyc_counts);
+hold on;
+p14 = plot(bins,acyc_counts, 'r');
+legend('cyclonic eddies','anticyclonic');
+title('Windspeed delta at first time-step after eddy | 1-25th translational speeds');
+ylabel('count');
+xlabel('Windspeed Delta (knots)');
+
+%second quarter of translational speed..
+f8 = figure;
+bins = (-100:5:75);
+bound_idx = bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_25,...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_50);
+cyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+    bound_idx);
+acyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
+    bound_idx);
+
+cyc_counts = histc(IBTrACS_1992_2010.Wind_d1(cyc_enter_idx),bins);
+acyc_counts = histc(IBTrACS_1992_2010.Wind_d1(acyc_enter_idx),bins);
+counts = [cyc_counts, acyc_counts];
+p15 = plot(bins,cyc_counts);
+hold on;
+p16 = plot(bins,acyc_counts, 'r');
+legend('cyclonic eddies','anticyclonic');
+title('Windspeed delta at first time-step after eddy | 26th-50th translational speeds');
+ylabel('count');
+xlabel('Windspeed Delta (knots)');
+
+%third quarter of translational speed..
+f9 = figure;
+bins = (-100:5:75);
+bound_idx = bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_50,...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_75);
+cyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+    bound_idx);
+acyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
+    bound_idx);
+
+cyc_counts = histc(IBTrACS_1992_2010.Wind_d1(cyc_enter_idx),bins);
+acyc_counts = histc(IBTrACS_1992_2010.Wind_d1(acyc_enter_idx),bins);
+counts = [cyc_counts, acyc_counts];
+p17 = plot(bins,cyc_counts);
+hold on;
+p18 = plot(bins,acyc_counts, 'r');
+legend('cyclonic eddies','anticyclonic');
+title('Windspeed delta at first time-step after eddy | 51st-75th translational speeds');
+ylabel('count');
+xlabel('Windspeed Delta (knots)');
+
+%fourth quarter of translational speed..
+f10 = figure;
+bins = (-100:5:75);
+bound_idx = bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_25,...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_50);
+cyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == -1),...
+    bound_idx);
+acyc_enter_idx = bitand(bitand(leave_eddy,IBTrACS_1992_2010.EddyClass(:) == 1),...
+    bound_idx);
+
+cyc_counts = histc(IBTrACS_1992_2010.Wind_d1(cyc_enter_idx),bins);
+acyc_counts = histc(IBTrACS_1992_2010.Wind_d1(acyc_enter_idx),bins);
+counts = [cyc_counts, acyc_counts];
+p19 = plot(bins,cyc_counts);
+hold on;
+p20 = plot(bins,acyc_counts, 'r');
+legend('cyclonic eddies','anticyclonic');
+title('Windspeed delta at first time-step after eddy | 76th-100th translational speeds');
 ylabel('count');
 xlabel('Windspeed Delta (knots)');
