@@ -25,7 +25,7 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx, EddyPixelCount].
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Search antiCyclonic eddies
     latProximity = abs(lat - [antiCyc.eddies.Lat]');
-    lonProximity = abs(lat - [antiCyc.eddies.Lon]');
+    lonProximity = abs(lon - [antiCyc.eddies.Lon]');
     consider_idx = bitand(latProximity <= 3.0, lonProximity <= 3.0);
     
     for i = 1 : size(antiCyc.eddies,2)
