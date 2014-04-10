@@ -1,5 +1,7 @@
 %determine indices of IBTrACS-eddies in which a hurricane interacts with an
 %eddy only once.
+%NOTE: Will miscategorize if the same eddy is encountered but in a
+%different eddy timeslice (weekly/daily)
 
 cur_hur = IBTrACS_1992_2010.Serial_Num(1);
 one_offs = false(size(IBTrACS_1992_2010,1),1);
@@ -32,3 +34,6 @@ for i = 1 : length(one_offs)
     end
     
 end
+
+name = 'one_only';
+one_offs = dataset({one_offs,name});
