@@ -3,8 +3,12 @@
 % 1-20 weeks seems sufficient, at 21 weeks there are only 93 hurricane
 % interactions and EddyAge > 20 accounts for only 4.5% of total
 
+load('/panfs/roc/groups/6/kumarv/keifenhe/Documents/Datasets/with_daily_eddies/IBTrACS_1992_2010_daily.mat');
+
 %Columns: Count, % of total (21106), acyc/cyc ratio
-results = zeros(20,3);
+results = zeros(20,5);
+
+labels = {'Count','Percentge','Ratio','NumAtLeast2Weeks','2WeekRatio'};
 
 wait_h = waitbar(0,'progress');
 for i = 1 : 140
@@ -15,9 +19,17 @@ for i = 1 : 140
     num_cyc = sum(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
         IBTrACS_1992_2010_daily.EddyClass(:) == -1));
     results(i,3) = num_cyc / num_acyc;
+    results(i,4) = sum(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,IBTrACS_1992_2010_daily.EddyTrackLifetime >= 14));
+    num_acyc = sum(bitand(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
+        IBTrACS_1992_2010_daily.EddyClass(:) == 1), IBTrACS_1992_2010_daily.EddyTrackLifetime >= 14));
+    num_cyc = sum(bitand(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
+        IBTrACS_1992_2010_daily.EddyClass(:) == -1), IBTrACS_1992_2010_daily.EddyTrackLifetime >= 14));
+    results(i,5) = num_cyc / num_acyc;
     waitbar(i/140);
 end
 delete(wait_h);
+
+eddy_age_ratios = dataset({results,labels{:}});
 
 names = {'Count       ';'% of total  ';'cyc_acyc_ratio'};
 eddy_ratio_for_hurr_interaction = dataset({results, names{:}});
