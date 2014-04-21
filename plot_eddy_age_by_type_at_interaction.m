@@ -3,73 +3,101 @@
 % 1-20 weeks seems sufficient, at 21 weeks there are only 93 hurricane
 % interactions and EddyAge > 20 accounts for only 4.5% of total
 
-load('/panfs/roc/groups/6/kumarv/keifenhe/Documents/Datasets/with_daily_eddies/IBTrACS_1992_2010_daily.mat');
+% load('/panfs/roc/groups/6/kumarv/keifenhe/Documents/Datasets/with_daily_eddies/IBTrACS_1992_2010.mat');
 
-%Columns: Count, % of total (21106), acyc/cyc ratio
-results = zeros(20,5);
+disp_25 = prctile(IBTrACS_1992_2010.Displacement_d1(~isnan(IBTrACS_1992_2010.EddyClass(:))),25);
+disp_50 = prctile(IBTrACS_1992_2010.Displacement_d1(~isnan(IBTrACS_1992_2010.EddyClass(:))),50);
+disp_75 = prctile(IBTrACS_1992_2010.Displacement_d1(~isnan(IBTrACS_1992_2010.EddyClass(:))),75);
+disp_100 = max(IBTrACS_1992_2010.Displacement_d1(~isnan(IBTrACS_1992_2010.EddyClass(:))));
 
-labels = {'Count','Percentge','Ratio','NumAtLeast2Weeks','2WeekRatio'};
+disp_25_idx = bitand(IBTrACS_1992_2010.Displacement_d1(:) <= disp_25, ~isnan(IBTrACS_1992_2010.EddyClass(:)));
+disp_50_idx = bitand(bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_25,...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_50), ~isnan(IBTrACS_1992_2010.EddyClass(:)));
+disp_75_idx = bitand(bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_50,...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_75), ~isnan(IBTrACS_1992_2010.EddyClass(:)));
+disp_100_idx = bitand(bitand(IBTrACS_1992_2010.Displacement_d1(:) > disp_75,...
+    IBTrACS_1992_2010.Displacement_d1(:) <= disp_100), ~isnan(IBTrACS_1992_2010.EddyClass(:)));
 
-wait_h = waitbar(0,'progress');
-for i = 1 : 140
-    results(i,1) = sum(IBTrACS_1992_2010_daily.EddyAge(:) == i);
-    results(i,2) = results(i,1) / 21106;
-    num_acyc = sum(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
-        IBTrACS_1992_2010_daily.EddyClass(:) == 1));
-    num_cyc = sum(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
-        IBTrACS_1992_2010_daily.EddyClass(:) == -1));
-    results(i,3) = num_cyc / num_acyc;
-    results(i,4) = sum(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,IBTrACS_1992_2010_daily.EddyTrackLifetime >= 14));
-    num_acyc = sum(bitand(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
-        IBTrACS_1992_2010_daily.EddyClass(:) == 1), IBTrACS_1992_2010_daily.EddyTrackLifetime >= 14));
-    num_cyc = sum(bitand(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
-        IBTrACS_1992_2010_daily.EddyClass(:) == -1), IBTrACS_1992_2010_daily.EddyTrackLifetime >= 14));
-    results(i,5) = num_cyc / num_acyc;
-    waitbar(i/140);
-end
-delete(wait_h);
+labels = {'1stQuadrant';'2ndQuadrant';'3rdQuadrant';'4thQuadrant'};
+indices = [disp_25_idx, disp_50_idx, disp_75_idx, disp_100_idx];
 
-eddy_age_ratios = dataset({results,labels{:}});
+%Columns: Count, % of total (21106), acyc/cyc ratio, count >= 14 weeks,
+%ratio of eddies lived >= 14 weeks.
+results = zeros(20,5,4);
 
-names = {'Count       ';'% of total  ';'cyc_acyc_ratio'};
-eddy_ratio_for_hurr_interaction = dataset({results, names{:}});
+data_labels = {'Count','Percentge','Ratio','NumAtLeast2Weeks','2WeekRatio'}';
 
-f1 = figure;
-p1 = scatter([1:140],eddy_ratio_for_hurr_interaction.cyc_acyc_ratio);
-title('Ratio of cyc/acyc eddies, per eddy age, during hurricane interaction');
-lsline
-ylabel('cyc/acyc ratio');
-xlabel('eddy age (days)');
-legend('ratio at day(x)','least-squares line');
 
-eddy_age_totals = zeros(134,2); %columns: [anticylonic, cyclonic]
-for i = 1 : 506
-    eddy_age_totals(i,1) = sum(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
-        IBTrACS_1992_2010_daily.EddyClass(:) == 1));
-    eddy_age_totals(i,2) = sum(bitand(IBTrACS_1992_2010_daily.EddyAge(:) == i,...
-        IBTrACS_1992_2010_daily.EddyClass(:) == -1));
-end
-f2 = figure;
-p2 = plot(eddy_age_totals(:,1));
-hold on
-p2_5 = plot(eddy_age_totals(:,2),'r');
-title('Histogram of eddy ages at hurricane interaction');
-ylabel('count');
-xlabel('eddy age (days)');
-legend('anticyclonic','cyclonic')
-f3 = figure;
-
-IBTrACS_1992_2010_daily_eddies = IBTrACS_1992_2010_daily(~isnan(IBTrACS_1992_2010_daily.EddyClass(:)),:);
-type = cell(size(IBTrACS_1992_2010_daily_eddies,1),1);
-
-for i = 1 : size(IBTrACS_1992_2010_daily_eddies,1)
-    if(IBTrACS_1992_2010_daily_eddies.EddyClass(i) == -1)
-        type{i} = 'cyclonic';
-    elseif(IBTrACS_1992_2010_daily_eddies.EddyClass(i) == 1)
-        type{i} = 'anticyclonic';
+for l = 1 : 4
+    wait_h = waitbar(0,'progress');
+    data = IBTrACS_1992_2010(indices(:,l),:);
+    for i = 1 : 20
+        results(i,1,l) = sum(data.EddyAge(:) == i);
+        results(i,2,l) = results(i,1) / size(data(~isnan(data.EddyClass),:),1);
+        num_acyc = sum(bitand(data.EddyAge(:) == i,...
+            data.EddyClass(:) == 1));
+        num_cyc = sum(bitand(data.EddyAge(:) == i,...
+            data.EddyClass(:) == -1));
+        results(i,3,l) = num_cyc / num_acyc;
+        results(i,4,l) = sum(bitand(data.EddyAge(:) == i,data.EddyTrackLength >= 14));
+        num_acyc = sum(bitand(bitand(data.EddyAge(:) == i,...
+            data.EddyClass(:) == 1), data.EddyTrackLength >= 14));
+        num_cyc = sum(bitand(bitand(data.EddyAge(:) == i,...
+            data.EddyClass(:) == -1), data.EddyTrackLength >= 14));
+        results(i,5,l) = num_cyc / num_acyc;
+        waitbar(i/20);
     end
-end
+    delete(wait_h);
 
-p3 = boxplot(IBTrACS_1992_2010_daily_eddies.EddyAge, type);
-title('Box plot of eddy age at hurricane interaction');
-ylabel('age (day)');
+%     eddy_age_ratios = dataset({results,data_labels{:}});
+
+    names = {'Count       ';'Percent of total  ';'Cyc_Acyc_ratio';'AtLeast14';'Ratio14'};
+    eddy_ratio_for_hurr_interaction = dataset({squeeze(results(:,:,l)), names{:}});
+
+    
+    stop = find(isinf(squeeze(results(:,3,l))),1) - 1;
+    figure;
+    scatter([1:20],eddy_ratio_for_hurr_interaction.Cyc_Acyc_ratio(1:20));
+    title(strcat('Ratio of cyc/acyc eddies, per eddy age, during hurricane interaction | ',labels{l}));
+    lsline
+    ylabel('cyc/acyc ratio');
+    xlabel('eddy age (weeks)');
+    legend('ratio at day(x)','least-squares line','Location','North');
+    saveas(gcf,strcat('eddy_','ratio_',labels{l},'.eps'),'epsc');
+
+    age_cutoff = prctile(data.EddyAge,99);
+    bins = 1:1:age_cutoff;
+    cyc_totals = histc(data.EddyAge(data.EddyClass == -1),bins);
+    acyc_totals = histc(data.EddyAge(data.EddyClass == 1),bins);
+    figure;
+    plot(bins, cyc_totals);
+    hold on
+    plot(bins, acyc_totals,'r');
+    title(strcat('Histogram of eddy ages at hurricane interaction | ',labels{l}));
+    ylabel('count');
+    xlabel('eddy age (weeks)');
+    legend(strcat('cyclonic | Mean: ',num2str(nanmean(data.EddyAge(data.EddyClass == -1)))),...
+        strcat('anticyclonic | Mean: ', num2str(nanmean(data.EddyAge(data.EddyClass == 1)))))
+    saveas(gcf,strcat('eddy_','hist_',labels{l},'.eps'),'epsc');
+    
+    figure;
+
+    data_eddies = data(~isnan(data.EddyClass(:)),:);
+    type = cell(size(data_eddies,1),1);
+
+    for i = 1 : size(data_eddies,1)
+        if(data_eddies.EddyClass(i) == -1)
+            type{i} = 'cyclonic';
+        elseif(data_eddies.EddyClass(i) == 1)
+            type{i} = 'anticyclonic';
+        end
+    end
+    
+
+    boxplot(data_eddies.EddyAge, type);
+    title(strcat('Box plot of eddy age at hurricane interaction | ',labels{l}));
+    ylabel('age (day)');
+    saveas(gcf,strcat('eddy_','box_',labels{l},'.eps'),'epsc');
+    
+    waitfor(msgbox('click OK to continue..'));
+end
