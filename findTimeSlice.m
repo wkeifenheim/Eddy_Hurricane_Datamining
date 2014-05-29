@@ -87,6 +87,6 @@ function time_slice = findTimeSlice(year, month, day)
         month = strcat('0',month);
     end
     
-    time_slice = strcat(year,month,day);
+    time_slice = strcat(year,'-',month,'-',day);
 
 end
