@@ -1,5 +1,5 @@
 %Considers each hurricane time-step, and performs a search to determine any
-%eddy interaction (currently defined as hurricane center co-located over
+%eddy interaction (currently defined as hurricane center colocated over
 %eddy body.
 %
 % Requires eddy timeslices to be loaded.. "loadEddyTimeslicesDaily.m"
@@ -10,9 +10,16 @@ tic;
 %Used by calcClosest.m
 p2ll = load('/project/expeditions/eddies_project_data/ssh_data/data/pixels_2_lat_lon_map.mat');
 
-load('/project/expeditions/nguy1532/eddy_repo/code/hung/interpolation/daily_dates.mat');
+% load eddies and eddy tracks. this will take a long time, around 1-2
+% hours
+load('/project/expeditions/alindell/results/tracks/test_tracks/tracks_93-12/cyclonic_tracks_processed.mat');
+load('/project/expeditions/alindell/results/tracks/test_tracks/tracks_93-12/anticyc_tracks_processed.mat');
+load('/project/expeditions/alindell/results/viewer_data/daily_SSH/dates_all.mat');
+load('~/Documents/Datasets/IBTrACS_1993_2012.mat');
+loadEddyTimeslicesDaily;
 
-total = size(IBTrACS_1992_2010_daily,1);
+% load base IBTrACS data
+total = size(IBTrACS_1993_2012,1);
 
 EddyClass = zeros(total,1);
 EddyLat = zeros(total,1);

@@ -7,11 +7,11 @@ cyc_set = IBTrACS_cyc;
 acyc_set = IBTrACS_acyc;
 
 %the following further reduces the datasets by eddy lifetime
-lifetime = 5; %the integer value represents the number of weeks in existence
-c_idx = cyc_set.EddyAge(:) >= lifetime;
-a_idx = acyc_set.EddyAge(:) >= lifetime;
-cyc_set = cyc_set(c_idx,:);
-acyc_set = acyc_set(a_idx,:);
+% lifetime = 5; %the integer value represents the number of weeks in existence
+% c_idx = cyc_set.EddyAge(:) >= lifetime;
+% a_idx = acyc_set.EddyAge(:) >= lifetime;
+% cyc_set = cyc_set(c_idx,:);
+% acyc_set = acyc_set(a_idx,:);
 
 
 tic
