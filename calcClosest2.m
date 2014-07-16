@@ -27,9 +27,10 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx, EddyPixelCount].
     latProximity = abs(lat - [antiCyc.eddies.Lat]');
     lonProximity = abs(lon - [antiCyc.eddies.Lon]');
     consider_idx = bitand(latProximity <= 3.0, lonProximity <= 3.0);
+    antiCyc.eddies = antiCyc.eddies(consider_idx);
     
     for i = 1 : size(antiCyc.eddies,2)
-        if(consider_idx(i))
+%         if(consider_idx(i))
             pixelLatLons = pid2latlon(antiCyc.eddies(i).Stats.PixelIdxList, p2ll.latLonMap);
             pixelLatLons(:,2) = pixelLatLons(:,2) - 360;
 %             distances = zeros(size(pixelLatLons,1),1);
@@ -48,7 +49,7 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx, EddyPixelCount].
                 eddyIdx = i;
                 EddyPixelCount = length(antiCyc.eddies(i).Stats.PixelIdxList);
             end
-        end
+%         end
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,9 +57,10 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx, EddyPixelCount].
     latProximity = abs(lat - [cyc.eddies.Lat]');
     lonProximity = abs(lon - [cyc.eddies.Lon]');
     consider_idx = bitand(latProximity <= 3.0, lonProximity <= 3.0);
+    cyc.eddies = cyc.eddies(consider_idx);
     
     for i = 1 : size(cyc.eddies,2)
-        if(consider_idx(i))
+%         if(consider_idx(i))
             pixelLatLons = pid2latlon(cyc.eddies(i).Stats.PixelIdxList, p2ll.latLonMap);
             pixelLatLons(:,2) = pixelLatLons(:,2) - 360;
 %             distances = zeros(size(pixelLatLons,1),1);
@@ -77,7 +79,7 @@ function [eddyClass, eddyLat, eddyLon, eddyAmp, eddyU, eddyIdx, EddyPixelCount].
                 eddyIdx = i;
                 EddyPixelCount = length(cyc.eddies(i).Stats.PixelIdxList);
             end
-        end
+%         end
     end    
               
 end

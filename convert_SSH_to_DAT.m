@@ -2,10 +2,10 @@ source_path = '/project/expeditions/eddies_project_data/results/tracks_viewer_da
 load(strcat(source_path, 'dates.mat'));
 dest_path = '/project/expeditions/eddies_project_data/web_viewer/SSH/';
 wait_h = waitbar(0, 'progress of converting SSH to .dat');
-for i = 1 : 52
+for i = 53 : 954
     source_file = strcat(source_path, 'ssh_', num2str(dates(i)), '.mat');
     load(source_file);
     dlmwrite(strcat(dest_path, 'ssh_', num2str(dates(i)), '.dat'), data);
-    waitbar(i/52);
+    waitbar(i/954);
 end
 delete(wait_h);

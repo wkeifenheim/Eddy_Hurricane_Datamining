@@ -1,10 +1,10 @@
 
-category = cell(60819,1);
+category = cell(71652,1);
 % load('/project/expeditions/woodrow/Datasets/landmask_datagrid.mat');
 wait_h = waitbar(0, 'progress');
 
-for i = 1 : 60819
-        windspeed = IBTrACS_1992_2010.WindWMO(i);
+for i = 1 : 71652
+        windspeed = IBTrACS_1993_2012.WindWMO(i);
         if(isnan(windspeed))
             category{i} = 'unknown';
         elseif(windspeed >= 64 && windspeed <= 82)
@@ -24,6 +24,6 @@ for i = 1 : 60819
         else
             category{i} = 'unknown';
         end
-    waitbar(i/60819)
+    waitbar(i/71652)
 end
 delete(wait_h)
